@@ -61,6 +61,11 @@ body {
 .vi { color: #4b5563; font-size: 0.9em; }
 .muted { color: var(--c-muted); font-size: 0.9em; }
 
+/* 色付き背景の中ではviを半透明白に（可読性確保） */
+button.primary .vi,
+.grade-box .vi,
+.choice-id .vi { color: rgba(255,255,255,0.85); }
+
 /* ============= フォーム ============= */
 form label {
   display: block;

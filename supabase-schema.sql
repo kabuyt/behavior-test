@@ -7,7 +7,7 @@
 -- 応募者情報＋回答を1レコードで保存
 create table if not exists behavior_test_results (
   id uuid primary key default gen_random_uuid(),
-  company_name text not null,               -- 応募先（送り出し機関 or 求人会社）
+  company_name text not null,               -- 応募会社名（求人企業）
   candidate_name text not null,             -- 応募者氏名
   candidate_number text,                    -- 候補者番号（任意）
   job_type text default '特定技能',         -- 求人区分
