@@ -75,12 +75,14 @@
   <!-- タブ: 個別詳細 -->
   <section id="tab-detail" class="tab">
     <button id="back-to-list" class="secondary">← 一覧に戻る</button>
-    <button id="print-btn" class="secondary">印刷 / PDF保存</button>
+    <button id="pdf-btn" class="primary">📄 PDFダウンロード</button>
+    <button id="print-btn" class="secondary">印刷</button>
     <div id="detail-body"></div>
   </section>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
 <script src="config.js"></script>
 <script src="questions.js"></script>
 <script src="admin.js"></script>

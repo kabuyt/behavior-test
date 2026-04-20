@@ -32,6 +32,39 @@
   $('csv-btn').addEventListener('click', exportCSV);
   $('back-to-list').addEventListener('click', () => switchTab('list'));
   $('print-btn').addEventListener('click', () => window.print());
+  $('pdf-btn').addEventListener('click', downloadPDF);
+
+  let currentReportTarget = null;
+
+  function downloadPDF() {
+    const el = document.querySelector('#detail-body .report');
+    if (!el) { alert('レポートが表示されていません'); return; }
+    const meta = currentReportTarget;
+    const fname = meta
+      ? `行動選択テスト_${meta.company_name}_${meta.candidate_name}_${(meta.submitted_at||'').slice(0,10)}.pdf`
+      : `行動選択テスト_${new Date().toISOString().slice(0,10)}.pdf`;
+
+    const btn = $('pdf-btn');
+    const orig = btn.textContent;
+    btn.textContent = '生成中...';
+    btn.disabled = true;
+
+    html2pdf().set({
+      margin: [10, 10, 10, 10],
+      filename: fname,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    }).from(el).save().then(() => {
+      btn.textContent = orig;
+      btn.disabled = false;
+    }).catch(err => {
+      alert('PDF生成に失敗しました: ' + err.message);
+      btn.textContent = orig;
+      btn.disabled = false;
+    });
+  }
   $('search').addEventListener('input', renderList);
 
   // データ取得
@@ -123,6 +156,7 @@
   // 個別詳細（レポート形式）
   function renderDetail(r) {
     if (!r) return;
+    currentReportTarget = r;
     const grade = calcGrade(r.total_score || 0);
     const rows = QUESTIONS.map(q => {
       const chosenId = r[`q${q.n}`];
