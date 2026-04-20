@@ -76,16 +76,19 @@ create trigger behavior_score_trigger
 -- ====================================================================
 alter table behavior_test_results enable row level security;
 
+-- anon または authenticated どちらでも insert/select 可
+-- （trainee-manager でログイン中だと authenticated ロールになるため public で統一）
 drop policy if exists "anon can insert" on behavior_test_results;
-create policy "anon can insert"
+drop policy if exists "public can insert" on behavior_test_results;
+create policy "public can insert"
   on behavior_test_results for insert
-  to anon with check (true);
+  to public with check (true);
 
--- 管理画面でも anon key を使うので select も anon に許可（必要に応じて IP 制限等）
 drop policy if exists "anon can read" on behavior_test_results;
-create policy "anon can read"
+drop policy if exists "public can read" on behavior_test_results;
+create policy "public can read"
   on behavior_test_results for select
-  to anon using (true);
+  to public using (true);
 
 -- ====================================================================
 -- 集計用ビュー：設問ごとの選択肢分布
