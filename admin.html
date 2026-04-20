@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理画面 - 行動選択テスト</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin">
+
+<!-- ログインゲート -->
+<section id="login-gate" class="screen active">
+  <div class="card">
+    <h1>管理画面</h1>
+    <form id="login-form">
+      <label>パスワード
+        <input type="password" id="admin-pw" autocomplete="current-password" required>
+      </label>
+      <button class="primary">ログイン</button>
+    </form>
+  </div>
+</section>
+
+<!-- 管理画面本体 -->
+<section id="admin-main" class="screen">
+  <header class="admin-header">
+    <h1>行動選択テスト 管理画面</h1>
+    <nav>
+      <button data-tab="list" class="tab-btn active">一覧</button>
+      <button data-tab="stats" class="tab-btn">集計</button>
+      <button data-tab="detail" class="tab-btn" style="display:none">個別詳細</button>
+    </nav>
+    <div class="admin-tools">
+      <input type="search" id="search" placeholder="会社名・氏名で検索">
+      <button id="reload-btn">再読込</button>
+      <button id="csv-btn">CSV出力</button>
+    </div>
+  </header>
+
+  <!-- タブ: 一覧 -->
+  <section id="tab-list" class="tab active">
+    <div class="summary-cards">
+      <div class="summary"><span>総受験者</span><strong id="sum-total">-</strong></div>
+      <div class="summary"><span>A評価</span><strong id="sum-a">-</strong></div>
+      <div class="summary"><span>B評価</span><strong id="sum-b">-</strong></div>
+      <div class="summary"><span>C評価</span><strong id="sum-c">-</strong></div>
+      <div class="summary"><span>D評価</span><strong id="sum-d">-</strong></div>
+      <div class="summary"><span>平均点</span><strong id="sum-avg">-</strong></div>
+    </div>
+    <table class="results">
+      <thead>
+        <tr>
+          <th>受験日時</th>
+          <th>会社</th>
+          <th>氏名</th>
+          <th>候補者番号</th>
+          <th>求人区分</th>
+          <th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th>
+          <th>点数</th>
+          <th>評価</th>
+          <th>所要</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+  </section>
+
+  <!-- タブ: 集計 -->
+  <section id="tab-stats" class="tab">
+    <h2>設問ごとの選択分布</h2>
+    <div id="question-stats"></div>
+  </section>
+
+  <!-- タブ: 個別詳細 -->
+  <section id="tab-detail" class="tab">
+    <button id="back-to-list" class="secondary">← 一覧に戻る</button>
+    <button id="print-btn" class="secondary">印刷 / PDF保存</button>
+    <div id="detail-body"></div>
+  </section>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

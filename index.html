@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行動選択テスト / Test lựa chọn hành động</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ステップ1: 受験者情報入力 -->
+<section id="step-intro" class="screen active">
+  <div class="card">
+    <h1>行動選択テスト<br><span class="vi">Test lựa chọn hành động</span></h1>
+    <p class="lead">
+      このテストに正解はありません。<br>
+      自分の考えに一番近い答えを選んでください。<br>
+      <span class="vi">Trong bài kiểm tra này không có đáp án chính xác tuyệt đối. Hãy lựa chọn câu trả lời phù hợp nhất với suy nghĩ của bản thân.</span>
+    </p>
+
+    <ul class="notice">
+      <li>全6問 / <span class="vi">Tổng cộng 6 câu</span></li>
+      <li>制限時間 10分 / <span class="vi">Thời gian làm bài: 10 phút</span></li>
+      <li>送信後の修正はできません / <span class="vi">Không thể chỉnh sửa sau khi gửi</span></li>
+    </ul>
+
+    <form id="intro-form">
+      <label>
+        会社名 / <span class="vi">Tên công ty</span>
+        <input type="text" id="company" required placeholder="例: ○○株式会社 / 送り出し機関名">
+      </label>
+      <label>
+        氏名 / <span class="vi">Họ tên</span>
+        <input type="text" id="name" required placeholder="例: NGUYEN VAN A">
+      </label>
+      <label>
+        候補者番号 / <span class="vi">Mã số ứng viên</span>（任意 / tùy chọn）
+        <input type="text" id="candidate-number" placeholder="">
+      </label>
+      <label>
+        求人区分 / <span class="vi">Loại công việc</span>
+        <select id="job-type">
+          <option value="特定技能">特定技能 / Kỹ năng đặc định</option>
+          <option value="技能実習">技能実習 / Thực tập kỹ năng</option>
+          <option value="その他">その他 / Khác</option>
+        </select>
+      </label>
+      <button type="submit" class="primary">
+        テスト開始 / <span class="vi">Bắt đầu</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ステップ2: テスト回答 -->
+<section id="step-test" class="screen">
+  <header class="test-header">
+    <div class="candidate-label" id="candidate-label"></div>
+    <div class="timer" id="timer">10:00</div>
+  </header>
+
+  <main id="questions-container"></main>
+
+  <footer class="test-footer">
+    <button id="submit-btn" class="primary" disabled>
+      回答を送信 / <span class="vi">Gửi bài</span>
+    </button>
+    <p class="progress" id="progress">0 / 6</p>
+  </footer>
+</section>
+
+<!-- ステップ3: 送信完了 -->
+<section id="step-done" class="screen">
+  <div class="card center">
+    <h1>✓ 送信完了<br><span class="vi">Đã gửi thành công</span></h1>
+    <p>お疲れさまでした。結果は後日担当者よりご連絡いたします。</p>
+    <p class="vi">Cảm ơn bạn đã làm bài. Kết quả sẽ được phụ trách liên lạc lại sau.</p>
+    <p class="muted" id="done-meta"></p>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
