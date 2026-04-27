@@ -217,8 +217,8 @@ const QUESTIONS = [
 
 // 総合グレード
 function calcGrade(score) {
-  if (score >= 15) return { grade: 'A', label: '非常に優秀', comment: '報連相・時間管理・対人姿勢すべて高水準。' };
-  if (score >= 11) return { grade: 'B', label: '良好',       comment: '基本的な職場適応力あり。教育で十分伸びる。' };
-  if (score >= 7)  return { grade: 'C', label: '要確認',     comment: '判断の弱い項目あり。面談で具体事例を追加確認推奨。' };
-  return             { grade: 'D', label: '要注意',     comment: '規律・倫理観に複数の懸念。慎重に判断。' };
+  if (score >= 15) return { grade: 'A', label: 'A', comment: '報連相・時間管理・対人姿勢で組織的・協調的な選択傾向。' };
+  if (score >= 11) return { grade: 'B', label: 'B', comment: '多くの項目で組織的な選択。一部で個人判断を優先する傾向。' };
+  if (score >= 7)  return { grade: 'C', label: 'C', comment: '場面により判断が分かれる傾向。組織的判断と個人判断が混在。' };
+  return             { grade: 'D', label: 'D', comment: '個人判断・独自基準を優先する選択傾向が複数項目で見られる。' };
 }

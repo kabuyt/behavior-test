@@ -191,7 +191,6 @@
           <div class="grade-box grade-${r.grade}">
             <div class="grade-letter">${r.grade || '-'}</div>
             <div class="grade-score">${r.total_score ?? 0} / 18点</div>
-            <div class="grade-label">${grade.label}</div>
           </div>
         </header>
         <p class="overall">${escapeHtml(grade.comment)}</p>
