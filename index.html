@@ -27,7 +27,9 @@
     <form id="intro-form">
       <label>
         氏名 / <span class="vi">Họ tên</span>
-        <input type="text" id="name" required placeholder="例: NGUYEN VAN A">
+        <input type="text" id="name" required placeholder="例: NGUYEN VAN A"
+          oninvalid="this.setCustomValidity('このフィールドに名前をいれてください / Vui lòng nhập tên của bạn')"
+          oninput="this.setCustomValidity('')">
       </label>
       <button type="submit" class="primary">
         テスト開始 / <span class="vi">Bắt đầu</span>
