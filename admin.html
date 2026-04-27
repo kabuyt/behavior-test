@@ -34,6 +34,7 @@
       <input type="search" id="search" placeholder="氏名で検索">
       <button id="reload-btn">再読込</button>
       <button id="csv-btn">CSV出力</button>
+      <button id="bulk-pdf-btn">📄 選択をPDF一括DL</button>
     </div>
   </header>
 
@@ -50,6 +51,7 @@
     <table class="results">
       <thead>
         <tr>
+          <th><input type="checkbox" id="select-all-cb" title="全選択"></th>
           <th>受験日時</th>
           <th>氏名</th>
           <th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th>
@@ -80,8 +82,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="config.js"></script>
 <script src="questions.js?v=3"></script>
-<script src="admin.js?v=3"></script>
+<script src="admin.js?v=4"></script>
 </body>
 </html>

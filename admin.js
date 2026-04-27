@@ -30,6 +30,7 @@
 
   $('reload-btn').addEventListener('click', loadResults);
   $('csv-btn').addEventListener('click', exportCSV);
+  $('bulk-pdf-btn').addEventListener('click', bulkDownloadPDF);
   $('back-to-list').addEventListener('click', () => switchTab('list'));
   $('print-btn').addEventListener('click', () => window.print());
   $('pdf-btn').addEventListener('click', downloadPDF);
@@ -89,6 +90,7 @@
     const body = $('results-body');
     body.innerHTML = rows.map(r => `
       <tr data-id="${r.id}">
+        <td><input type="checkbox" class="row-check" data-id="${r.id}"></td>
         <td>${fmtDate(r.submitted_at)}</td>
         <td>${escapeHtml(r.candidate_name)}</td>
         <td>${r.q1 ?? '-'}</td><td>${r.q2 ?? '-'}</td><td>${r.q3 ?? '-'}</td>
@@ -98,7 +100,7 @@
         <td>${fmtDuration(r.duration_seconds)}</td>
         <td><button class="link detail-btn">詳細</button></td>
       </tr>
-    `).join('') || '<tr><td colspan="12" class="empty">データなし</td></tr>';
+    `).join('') || '<tr><td colspan="13" class="empty">データなし</td></tr>';
 
     body.querySelectorAll('.detail-btn').forEach(b => {
       b.addEventListener('click', (e) => {
@@ -106,6 +108,15 @@
         renderDetail(allResults.find(r => r.id === id));
       });
     });
+
+    // 行クリックでチェック切替（detail / row-check 自身は除く）
+    const selectAll = $('select-all-cb');
+    if (selectAll) {
+      selectAll.checked = false;
+      selectAll.onchange = () => {
+        body.querySelectorAll('.row-check').forEach(cb => cb.checked = selectAll.checked);
+      };
+    }
 
     // サマリーカード
     const total = allResults.length;
@@ -148,10 +159,8 @@
     }).join('');
   }
 
-  // 個別詳細（レポート形式）
-  function renderDetail(r) {
-    if (!r) return;
-    currentReportTarget = r;
+  // レポートHTML構築（個別表示・PDF一括DL の両方で使用）
+  function buildReportHTML(r) {
     const grade = calcGrade(r.total_score || 0);
     const rows = QUESTIONS.map(q => {
       const chosenId = r[`q${q.n}`];
@@ -175,7 +184,7 @@
       `;
     }).join('');
 
-    $('detail-body').innerHTML = `
+    return `
       <article class="report">
         <header class="report-head">
           <div>
@@ -197,8 +206,75 @@
         ${rows}
       </article>
     `;
+  }
+
+  // 個別詳細
+  function renderDetail(r) {
+    if (!r) return;
+    currentReportTarget = r;
+    $('detail-body').innerHTML = buildReportHTML(r);
     switchTab('detail');
     window.scrollTo(0, 0);
+  }
+
+  // PDF一括ダウンロード（ZIP）
+  async function bulkDownloadPDF() {
+    const selectedIds = [...document.querySelectorAll('.row-check:checked')].map(cb => cb.dataset.id);
+    if (selectedIds.length === 0) {
+      alert('対象を選択してください');
+      return;
+    }
+    const targets = selectedIds.map(id => allResults.find(r => r.id === id)).filter(Boolean);
+
+    const btn = $('bulk-pdf-btn');
+    const orig = btn.textContent;
+    btn.disabled = true;
+
+    // 隠し描画コンテナ（A4幅相当）
+    let container = document.getElementById('hidden-render');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'hidden-render';
+      container.style.cssText = 'position:absolute;left:-9999px;top:0;width:794px;background:#fff;';
+      document.body.appendChild(container);
+    }
+
+    const zip = new JSZip();
+    const opts = {
+      margin: [10, 10, 10, 10],
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    try {
+      for (let i = 0; i < targets.length; i++) {
+        const r = targets[i];
+        btn.textContent = `生成中 ${i + 1}/${targets.length}...`;
+        container.innerHTML = buildReportHTML(r);
+        const reportEl = container.querySelector('.report');
+        const blob = await html2pdf().set(opts).from(reportEl).output('blob');
+        const fname = `行動選択テスト_${r.candidate_name}_${(r.submitted_at || '').slice(0, 10)}.pdf`;
+        zip.file(fname, blob);
+      }
+      btn.textContent = 'ZIP生成中...';
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `行動選択テスト_一括_${new Date().toISOString().slice(0, 10)}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('PDF生成失敗: ' + err.message);
+    } finally {
+      container.innerHTML = '';
+      btn.textContent = orig;
+      btn.disabled = false;
+    }
   }
 
   // CSV出力
