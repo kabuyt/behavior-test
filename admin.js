@@ -41,7 +41,7 @@
     if (!el) { alert('レポートが表示されていません'); return; }
     const meta = currentReportTarget;
     const fname = meta
-      ? `行動選択テスト_${meta.company_name}_${meta.candidate_name}_${(meta.submitted_at||'').slice(0,10)}.pdf`
+      ? `行動選択テスト_${meta.candidate_name}_${(meta.submitted_at||'').slice(0,10)}.pdf`
       : `行動選択テスト_${new Date().toISOString().slice(0,10)}.pdf`;
 
     const btn = $('pdf-btn');
@@ -83,16 +83,13 @@
   function renderList() {
     const kw = $('search').value.trim().toLowerCase();
     const rows = allResults.filter(r =>
-      !kw ||
-      (r.company_name || '').toLowerCase().includes(kw) ||
-      (r.candidate_name || '').toLowerCase().includes(kw)
+      !kw || (r.candidate_name || '').toLowerCase().includes(kw)
     );
 
     const body = $('results-body');
     body.innerHTML = rows.map(r => `
       <tr data-id="${r.id}">
         <td>${fmtDate(r.submitted_at)}</td>
-        <td>${escapeHtml(r.company_name)}</td>
         <td>${escapeHtml(r.candidate_name)}</td>
         <td>${r.q1 ?? '-'}</td><td>${r.q2 ?? '-'}</td><td>${r.q3 ?? '-'}</td>
         <td>${r.q4 ?? '-'}</td><td>${r.q5 ?? '-'}</td><td>${r.q6 ?? '-'}</td>
@@ -101,7 +98,7 @@
         <td>${fmtDuration(r.duration_seconds)}</td>
         <td><button class="link detail-btn">詳細</button></td>
       </tr>
-    `).join('') || '<tr><td colspan="13" class="empty">データなし</td></tr>';
+    `).join('') || '<tr><td colspan="12" class="empty">データなし</td></tr>';
 
     body.querySelectorAll('.detail-btn').forEach(b => {
       b.addEventListener('click', (e) => {
@@ -184,7 +181,7 @@
           <div>
             <h2>行動選択テスト 結果レポート</h2>
             <p class="meta">
-              <strong>${escapeHtml(r.company_name)}</strong> / ${escapeHtml(r.candidate_name)}
+              <strong>${escapeHtml(r.candidate_name)}</strong>
             </p>
             <p class="meta">
               受験日時: ${fmtDate(r.submitted_at)} ／
@@ -208,10 +205,10 @@
   // CSV出力
   function exportCSV() {
     if (!allResults.length) { alert('データがありません'); return; }
-    const header = ['受験日時','会社名','氏名',
+    const header = ['受験日時','氏名',
       'Q1','Q2','Q3','Q4','Q5','Q6','点数','評価','所要秒'];
     const rows = allResults.map(r => [
-      fmtDate(r.submitted_at), r.company_name, r.candidate_name,
+      fmtDate(r.submitted_at), r.candidate_name,
       r.q1, r.q2, r.q3, r.q4, r.q5, r.q6,
       r.total_score, r.grade, r.duration_seconds
     ]);

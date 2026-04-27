@@ -2,7 +2,6 @@
 (() => {
   const TIME_LIMIT_SEC = 600; // 10分
   const state = {
-    company: '',
     name: '',
     answers: {},      // { 1: 3, 2: 2, ... }
     startedAt: null,
@@ -19,11 +18,10 @@
   // ステップ1 → 2
   $('intro-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    state.company = $('company').value.trim();
     state.name = $('name').value.trim();
-    if (!state.company || !state.name) return;
+    if (!state.name) return;
 
-    $('candidate-label').textContent = `${state.company} / ${state.name}`;
+    $('candidate-label').textContent = state.name;
     renderQuestions();
     show('step-test');
     startTimer();
@@ -98,7 +96,7 @@
     clearInterval(state.timerId);
 
     const payload = {
-      company_name: state.company,
+      company_name: '',
       candidate_name: state.name,
       q1: state.answers[1] || null,
       q2: state.answers[2] || null,
