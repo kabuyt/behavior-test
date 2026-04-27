@@ -94,7 +94,6 @@
         <td>${fmtDate(r.submitted_at)}</td>
         <td>${escapeHtml(r.company_name)}</td>
         <td>${escapeHtml(r.candidate_name)}</td>
-        <td>${escapeHtml(r.candidate_number || '')}</td>
         <td>${r.q1 ?? '-'}</td><td>${r.q2 ?? '-'}</td><td>${r.q3 ?? '-'}</td>
         <td>${r.q4 ?? '-'}</td><td>${r.q5 ?? '-'}</td><td>${r.q6 ?? '-'}</td>
         <td class="score">${r.total_score ?? '-'}</td>
@@ -102,7 +101,7 @@
         <td>${fmtDuration(r.duration_seconds)}</td>
         <td><button class="link detail-btn">詳細</button></td>
       </tr>
-    `).join('') || '<tr><td colspan="14" class="empty">データなし</td></tr>';
+    `).join('') || '<tr><td colspan="13" class="empty">データなし</td></tr>';
 
     body.querySelectorAll('.detail-btn').forEach(b => {
       b.addEventListener('click', (e) => {
@@ -186,7 +185,6 @@
             <h2>行動選択テスト 結果レポート</h2>
             <p class="meta">
               <strong>${escapeHtml(r.company_name)}</strong> / ${escapeHtml(r.candidate_name)}
-              ${r.candidate_number ? ` (No.${escapeHtml(r.candidate_number)})` : ''}
             </p>
             <p class="meta">
               受験日時: ${fmtDate(r.submitted_at)} ／
@@ -210,11 +208,10 @@
   // CSV出力
   function exportCSV() {
     if (!allResults.length) { alert('データがありません'); return; }
-    const header = ['受験日時','会社名','氏名','候補者番号',
+    const header = ['受験日時','会社名','氏名',
       'Q1','Q2','Q3','Q4','Q5','Q6','点数','評価','所要秒'];
     const rows = allResults.map(r => [
       fmtDate(r.submitted_at), r.company_name, r.candidate_name,
-      r.candidate_number || '',
       r.q1, r.q2, r.q3, r.q4, r.q5, r.q6,
       r.total_score, r.grade, r.duration_seconds
     ]);

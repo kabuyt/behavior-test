@@ -4,7 +4,6 @@
   const state = {
     company: '',
     name: '',
-    candidateNumber: '',
     answers: {},      // { 1: 3, 2: 2, ... }
     startedAt: null,
     submitted: false,
@@ -22,7 +21,6 @@
     e.preventDefault();
     state.company = $('company').value.trim();
     state.name = $('name').value.trim();
-    state.candidateNumber = $('candidate-number').value.trim();
     if (!state.company || !state.name) return;
 
     $('candidate-label').textContent = `${state.company} / ${state.name}`;
@@ -102,7 +100,6 @@
     const payload = {
       company_name: state.company,
       candidate_name: state.name,
-      candidate_number: state.candidateNumber || null,
       q1: state.answers[1] || null,
       q2: state.answers[2] || null,
       q3: state.answers[3] || null,
