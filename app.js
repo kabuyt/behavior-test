@@ -5,7 +5,6 @@
     company: '',
     name: '',
     candidateNumber: '',
-    jobType: '',
     answers: {},      // { 1: 3, 2: 2, ... }
     startedAt: null,
     submitted: false,
@@ -24,7 +23,6 @@
     state.company = $('company').value.trim();
     state.name = $('name').value.trim();
     state.candidateNumber = $('candidate-number').value.trim();
-    state.jobType = $('job-type').value;
     if (!state.company || !state.name) return;
 
     $('candidate-label').textContent = `${state.company} / ${state.name}`;
@@ -105,7 +103,6 @@
       company_name: state.company,
       candidate_name: state.name,
       candidate_number: state.candidateNumber || null,
-      job_type: state.jobType,
       q1: state.answers[1] || null,
       q2: state.answers[2] || null,
       q3: state.answers[3] || null,
