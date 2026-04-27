@@ -217,8 +217,8 @@ const QUESTIONS = [
 
 // 総合グレード
 function calcGrade(score) {
-  if (score >= 15) return { grade: 'A', label: '非常に優秀', comment: '報連相・時間管理・対人姿勢すべて高水準。強く推薦。' };
-  if (score >= 11) return { grade: 'B', label: '良好',       comment: '基本的な職場適応力あり。教育で十分伸びる。推薦。' };
+  if (score >= 15) return { grade: 'A', label: '非常に優秀', comment: '報連相・時間管理・対人姿勢すべて高水準。' };
+  if (score >= 11) return { grade: 'B', label: '良好',       comment: '基本的な職場適応力あり。教育で十分伸びる。' };
   if (score >= 7)  return { grade: 'C', label: '要確認',     comment: '判断の弱い項目あり。面談で具体事例を追加確認推奨。' };
-  return             { grade: 'D', label: '要注意',     comment: '規律・倫理観に複数の懸念。採用は慎重に判断。' };
+  return             { grade: 'D', label: '要注意',     comment: '規律・倫理観に複数の懸念。慎重に判断。' };
 }
