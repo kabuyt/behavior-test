@@ -95,8 +95,6 @@
         <td>${escapeHtml(r.candidate_name)}</td>
         <td>${r.q1 ?? '-'}</td><td>${r.q2 ?? '-'}</td><td>${r.q3 ?? '-'}</td>
         <td>${r.q4 ?? '-'}</td><td>${r.q5 ?? '-'}</td><td>${r.q6 ?? '-'}</td>
-        <td class="score">${r.total_score ?? '-'}</td>
-        <td class="grade grade-${r.grade || 'x'}">${r.grade || '-'}</td>
         <td>${fmtDuration(r.duration_seconds)}</td>
         <td><button class="link detail-btn">詳細</button></td>
       </tr>
@@ -120,16 +118,7 @@
 
     // サマリーカード
     const total = allResults.length;
-    const byGrade = (g) => allResults.filter(r => r.grade === g).length;
-    const avg = total
-      ? (allResults.reduce((s, r) => s + (r.total_score || 0), 0) / total).toFixed(1)
-      : '-';
     $('sum-total').textContent = total;
-    $('sum-a').textContent = byGrade('A');
-    $('sum-b').textContent = byGrade('B');
-    $('sum-c').textContent = byGrade('C');
-    $('sum-d').textContent = byGrade('D');
-    $('sum-avg').textContent = avg;
   }
 
   // 集計描画
@@ -145,7 +134,6 @@
             <span class="bar-label">
               <span class="bar-id">${c.id}</span>
               <span class="bar-text">${escapeHtml(c.ja)}</span>
-              <span class="bar-score score-${c.score}">${c.score}点</span>
             </span>
             <span class="bar-track"><span class="bar-fill" style="width:${pct}%"></span></span>
             <span class="bar-count">${n}人 (${pct}%)</span>
@@ -161,7 +149,6 @@
 
   // レポートHTML構築（個別表示・PDF一括DL の両方で使用）
   function buildReportHTML(r) {
-    const grade = calcGrade(r.total_score || 0);
     const rows = QUESTIONS.map(q => {
       const chosenId = r[`q${q.n}`];
       const chosen = q.choices.find(c => c.id === chosenId);
@@ -170,10 +157,9 @@
           <h3>【${q.n}】${escapeHtml(q.ja)}</h3>
           <p class="vi">${escapeHtml(q.vi)}</p>
           ${chosen ? `
-            <div class="chosen score-${chosen.score}">
+            <div class="chosen">
               <div class="chosen-head">
                 選択: <strong>${chosen.id}</strong>
-                <span class="score-pill">${chosen.score} / 3点</span>
               </div>
               <div class="chosen-text">${escapeHtml(chosen.ja)}</div>
               <div class="chosen-vi">${escapeHtml(chosen.vi)}</div>
@@ -197,12 +183,7 @@
               所要時間: ${fmtDuration(r.duration_seconds)}
             </p>
           </div>
-          <div class="grade-box grade-${r.grade}">
-            <div class="grade-letter">${r.grade || '-'}</div>
-            <div class="grade-score">${r.total_score ?? 0} / 18点</div>
-          </div>
         </header>
-        <p class="overall">${escapeHtml(grade.comment)}</p>
         ${rows}
       </article>
     `;
@@ -281,11 +262,11 @@
   function exportCSV() {
     if (!allResults.length) { alert('データがありません'); return; }
     const header = ['受験日時','氏名',
-      'Q1','Q2','Q3','Q4','Q5','Q6','点数','評価','所要秒'];
+      'Q1','Q2','Q3','Q4','Q5','Q6','所要秒'];
     const rows = allResults.map(r => [
       fmtDate(r.submitted_at), r.candidate_name,
       r.q1, r.q2, r.q3, r.q4, r.q5, r.q6,
-      r.total_score, r.grade, r.duration_seconds
+      r.duration_seconds
     ]);
     const csv = [header, ...rows].map(row =>
       row.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')
