@@ -163,7 +163,7 @@
               </div>
               <div class="chosen-text">${escapeHtml(chosen.ja)}</div>
               <div class="chosen-vi">${escapeHtml(chosen.vi)}</div>
-              <div class="analysis"><strong>行動分析:</strong> ${escapeHtml(chosen.analysis)}</div>
+              <div class="analysis"><strong>行動傾向:</strong> ${escapeHtml(chosen.analysis)}</div>
             </div>
           ` : '<div class="chosen empty">未回答</div>'}
         </section>
