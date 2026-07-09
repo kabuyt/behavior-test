@@ -26,7 +26,7 @@ SQL Editor で `supabase-schema.sql` の内容を貼り付けて実行。
 作成されるもの：
 - `behavior_test_results` テーブル
 - 自動採点トリガー（insertと同時に total_score と grade が計算される）
-- RLSポリシー（anonでinsertとselectが可能）
+- RLSポリシー（publicでinsert / select / delete が可能）
 - `v_behavior_question_stats` 集計ビュー
 
 ### 2. GitHubにpush → Pages公開
@@ -61,7 +61,7 @@ Settings → Pages → Source: `main / root` で公開。
 → パスワード入力
 → 3タブ：一覧 / 集計 / 個別詳細
 
-- **一覧**: A〜D評価のサマリー、全受験者の一行表示、CSV出力
+- **一覧**: 全受験者の一行表示、CSV出力、個別削除、選択行の一括PDF / 一括削除
 - **集計**: 6問それぞれの選択肢分布をバーチャートで表示
 - **個別詳細**: 選んだ一人の回答と、各選択肢の行動分析コメント付きレポート（印刷/PDF保存可）
 
@@ -87,4 +87,5 @@ Settings → Pages → Source: `main / root` で公開。
 ## 注意事項
 - anon keyは公開されるため、重要情報はこのテーブルに入れないこと
 - 管理画面のパスワードはクライアント側のみの軽いゲート。本格運用時はSupabase AuthやEdge Functionsで認証を追加すること
+- 削除機能を使うには Supabase 側でも `delete` を許可する必要がある。現在の静的構成では、この削除権限も公開クライアントから到達可能な点に注意
 - 候補者が複数回受験した場合はすべて別レコードとして保存される（同じ氏名でも重複チェックはしていない）

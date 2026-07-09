@@ -106,6 +106,15 @@ button.primary:hover { background: var(--c-primary-dark); }
 button.primary:disabled { background: #9ca3af; border-color: #9ca3af; cursor: not-allowed; }
 button.secondary { background: #f3f4f6; }
 button.link { background: none; border: none; color: var(--c-primary); text-decoration: underline; padding: 2px 6px; }
+button.danger {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+button.danger:hover { background: #fecaca; }
+button.danger:disabled { color: #9ca3af; border-color: #e5e7eb; background: #f3f4f6; cursor: not-allowed; }
+button.danger-text { color: #b91c1c; }
+button.link:disabled { color: #9ca3af; text-decoration: none; cursor: not-allowed; }
 
 /* ============= テスト画面 ============= */
 .test-header {
@@ -263,6 +272,7 @@ body.admin { background: #eef0f3; }
 .results tbody tr:hover { background: #f3f4f6; }
 .results .score { font-weight: bold; text-align: center; }
 .results .grade { font-weight: bold; text-align: center; }
+.actions-cell { white-space: nowrap; }
 .grade-A { color: var(--c-a); }
 .grade-B { color: var(--c-b); }
 .grade-C { color: var(--c-c); }

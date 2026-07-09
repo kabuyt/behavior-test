@@ -31,6 +31,7 @@
   $('reload-btn').addEventListener('click', loadResults);
   $('csv-btn').addEventListener('click', exportCSV);
   $('bulk-pdf-btn').addEventListener('click', bulkDownloadPDF);
+  $('bulk-delete-btn').addEventListener('click', bulkDeleteResults);
   $('back-to-list').addEventListener('click', () => switchTab('list'));
   $('print-btn').addEventListener('click', () => window.print());
   $('pdf-btn').addEventListener('click', downloadPDF);
@@ -96,7 +97,10 @@
         <td>${r.q1 ?? '-'}</td><td>${r.q2 ?? '-'}</td><td>${r.q3 ?? '-'}</td>
         <td>${r.q4 ?? '-'}</td><td>${r.q5 ?? '-'}</td><td>${r.q6 ?? '-'}</td>
         <td>${fmtDuration(r.duration_seconds)}</td>
-        <td><button class="link detail-btn">詳細</button></td>
+        <td class="actions-cell">
+          <button class="link detail-btn">詳細</button>
+          <button class="link danger-text delete-btn">削除</button>
+        </td>
       </tr>
     `).join('') || '<tr><td colspan="13" class="empty">データなし</td></tr>';
 
@@ -104,6 +108,19 @@
       b.addEventListener('click', (e) => {
         const id = e.target.closest('tr').dataset.id;
         renderDetail(allResults.find(r => r.id === id));
+      });
+    });
+
+    body.querySelectorAll('.delete-btn').forEach(b => {
+      b.addEventListener('click', async (e) => {
+        const id = e.target.closest('tr').dataset.id;
+        const target = allResults.find(r => r.id === id);
+        if (!target) return;
+        const ok = window.confirm(
+          `「${target.candidate_name || 'この結果'}」を削除しますか？\nこの操作は元に戻せません。`
+        );
+        if (!ok) return;
+        await deleteResults([id]);
       });
     });
 
@@ -200,7 +217,7 @@
 
   // PDF一括ダウンロード（ZIP）
   async function bulkDownloadPDF() {
-    const selectedIds = [...document.querySelectorAll('.row-check:checked')].map(cb => cb.dataset.id);
+    const selectedIds = getSelectedIds();
     if (selectedIds.length === 0) {
       alert('対象を選択してください');
       return;
@@ -258,6 +275,46 @@
     }
   }
 
+  async function bulkDeleteResults() {
+    const selectedIds = getSelectedIds();
+    if (selectedIds.length === 0) {
+      alert('削除する結果を選択してください');
+      return;
+    }
+    const ok = window.confirm(
+      `${selectedIds.length}件の結果を削除しますか？\nこの操作は元に戻せません。`
+    );
+    if (!ok) return;
+    await deleteResults(selectedIds);
+  }
+
+  async function deleteResults(ids) {
+    const uniqueIds = [...new Set(ids)].filter(Boolean);
+    if (!uniqueIds.length) return;
+
+    setDeleteButtonsDisabled(true);
+    const { error } = await supabase
+      .from('behavior_test_results')
+      .delete()
+      .in('id', uniqueIds);
+    setDeleteButtonsDisabled(false);
+
+    if (error) {
+      alert(`削除に失敗しました: ${error.message}\nSupabase側で delete ポリシーが未設定の可能性があります。`);
+      return;
+    }
+
+    allResults = allResults.filter(r => !uniqueIds.includes(r.id));
+    if (currentReportTarget && uniqueIds.includes(currentReportTarget.id)) {
+      currentReportTarget = null;
+      $('detail-body').innerHTML = '';
+      switchTab('list');
+    }
+    renderList();
+    renderStats();
+    alert(`${uniqueIds.length}件を削除しました`);
+  }
+
   // CSV出力
   function exportCSV() {
     if (!allResults.length) { alert('データがありません'); return; }
@@ -289,6 +346,18 @@
   function fmtDuration(sec) {
     if (sec == null) return '-';
     return `${Math.floor(sec/60)}分${sec%60}秒`;
+  }
+  function getSelectedIds() {
+    return [...document.querySelectorAll('.row-check:checked')].map(cb => cb.dataset.id);
+  }
+  function setDeleteButtonsDisabled(disabled) {
+    ['bulk-delete-btn'].forEach(id => {
+      const el = $(id);
+      if (el) el.disabled = disabled;
+    });
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.disabled = disabled;
+    });
   }
   const pad = (n) => String(n).padStart(2, '0');
   function escapeHtml(s) {

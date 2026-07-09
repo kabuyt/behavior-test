@@ -90,6 +90,12 @@ create policy "public can read"
   on behavior_test_results for select
   to public using (true);
 
+drop policy if exists "anon can delete" on behavior_test_results;
+drop policy if exists "public can delete" on behavior_test_results;
+create policy "public can delete"
+  on behavior_test_results for delete
+  to public using (true);
+
 -- ====================================================================
 -- 集計用ビュー：設問ごとの選択肢分布
 -- ====================================================================
