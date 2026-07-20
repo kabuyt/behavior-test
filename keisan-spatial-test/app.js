@@ -8,7 +8,6 @@
   };
 
   const { questions, operatorChoices, isAnswered } = window.TEST_APP;
-
   const $ = (id) => document.getElementById(id);
 
   function show(id) {
@@ -17,6 +16,30 @@
   }
 
   function renderQuestion(question) {
+    if (question.type === "text" && question.answerType === "time") {
+      return `
+        <article class="question" data-question-id="${question.id}">
+          <div class="question-badge">Q${question.number}</div>
+          <div class="question-body">
+            <h3>${question.title}</h3>
+            <p class="vi-text question-help">Chọn giờ và phút bằng danh sách ở bên dưới.</p>
+            <div class="time-select-row">
+              <select data-kind="time-hour" data-question-id="${question.id}">
+                <option value="">時間</option>
+                ${buildNumberOptions(0, 5)}
+              </select>
+              <span class="time-unit">時間</span>
+              <select data-kind="time-minute" data-question-id="${question.id}">
+                <option value="">分</option>
+                ${buildNumberOptions(0, 59)}
+              </select>
+              <span class="time-unit">分</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
     if (question.type === "text") {
       return `
         <article class="question" data-question-id="${question.id}">
@@ -79,6 +102,14 @@
     `;
   }
 
+  function buildNumberOptions(min, max) {
+    const parts = [];
+    for (let value = min; value <= max; value += 1) {
+      parts.push(`<option value="${value}">${value}</option>`);
+    }
+    return parts.join("");
+  }
+
   function renderAll() {
     $("section-arithmetic").innerHTML = questions.filter((q) => q.section === "arithmetic").map(renderQuestion).join("");
     $("section-operators").innerHTML = questions.filter((q) => q.section === "operators").map(renderQuestion).join("");
@@ -87,6 +118,17 @@
     document.querySelectorAll("[data-kind='text']").forEach((input) => {
       input.addEventListener("input", () => {
         state.answers[input.dataset.questionId] = input.value.trim();
+        updateProgress();
+      });
+    });
+
+    document.querySelectorAll("[data-kind='time-hour'], [data-kind='time-minute']").forEach((select) => {
+      select.addEventListener("change", () => {
+        const questionId = select.dataset.questionId;
+        const existing = parseTimeAnswer(state.answers[questionId]);
+        const hour = select.dataset.kind === "time-hour" ? select.value : existing.hour;
+        const minute = select.dataset.kind === "time-minute" ? select.value : existing.minute;
+        state.answers[questionId] = hour !== "" && minute !== "" ? `${hour}:${minute}` : "";
         updateProgress();
       });
     });
@@ -107,6 +149,12 @@
         updateProgress();
       });
     });
+  }
+
+  function parseTimeAnswer(value) {
+    if (!value || String(value).indexOf(":") === -1) return { hour: "", minute: "" };
+    const parts = String(value).split(":");
+    return { hour: parts[0] || "", minute: parts[1] || "" };
   }
 
   function updateProgress() {

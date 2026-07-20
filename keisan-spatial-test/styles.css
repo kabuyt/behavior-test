@@ -335,6 +335,23 @@ button.primary:disabled {
   max-width: 240px;
 }
 
+.time-select-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.time-select-row select {
+  width: 110px;
+  margin-top: 0;
+}
+
+.time-unit {
+  font-weight: 700;
+  color: var(--muted);
+}
+
 .operator-line {
   display: flex;
   align-items: center;
