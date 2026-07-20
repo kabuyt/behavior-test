@@ -126,7 +126,7 @@
     document.querySelectorAll("[data-kind='time-hour'], [data-kind='time-minute']").forEach((select) => {
       select.addEventListener("change", () => {
         const questionId = select.dataset.questionId;
-        const questionEl = select.closest("[data-question-id]");
+        const questionEl = select.closest(".question");
         const hourSelect = questionEl ? questionEl.querySelector("[data-kind='time-hour']") : null;
         const minuteSelect = questionEl ? questionEl.querySelector("[data-kind='time-minute']") : null;
         const hour = hourSelect ? hourSelect.value : "";
