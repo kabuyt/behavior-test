@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>計算・空間認識テスト 管理画面</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-page">
+<section id="login-gate" class="screen active">
+  <div class="card login-card">
+    <p class="eyebrow">Admin Access</p>
+    <h1>管理画面</h1>
+    <form id="login-form">
+      <label>
+        パスワード
+        <input type="password" id="admin-pw" required autocomplete="current-password">
+      </label>
+      <button class="primary">ログイン</button>
+    </form>
+  </div>
+</section>
+
+<section id="admin-main" class="screen">
+  <header class="admin-header">
+    <div>
+      <p class="eyebrow light">Result Console</p>
+      <h1>計算・空間認識テスト 管理画面</h1>
+    </div>
+    <div class="admin-tools">
+      <input type="search" id="search" placeholder="氏名で検索">
+      <button id="reload-btn">再読込</button>
+      <button id="csv-btn">CSV出力</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="summary-grid">
+      <article class="summary-box">
+        <span>受験数</span>
+        <strong id="sum-total">0</strong>
+      </article>
+      <article class="summary-box">
+        <span>平均点</span>
+        <strong id="sum-average">0 / 13</strong>
+      </article>
+      <article class="summary-box">
+        <span>最高点</span>
+        <strong id="sum-best">0 / 13</strong>
+      </article>
+    </section>
+
+    <section class="admin-layout">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>結果一覧</h2>
+        </div>
+        <div class="table-wrap">
+          <table class="results">
+            <thead>
+              <tr>
+                <th>受験日時</th>
+                <th>氏名</th>
+                <th>得点</th>
+                <th>所要時間</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="results-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel detail-panel">
+        <div class="panel-head">
+          <h2>詳細</h2>
+        </div>
+        <div id="detail-body" class="detail-body muted">左の一覧から受験者を選択してください。</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>問題別正答率</h2>
+      </div>
+      <div id="stats-body" class="stats-body"></div>
+    </section>
+  </main>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>計算・空間認識テスト</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<section id="step-intro" class="screen active">
+  <div class="card hero">
+    <p class="eyebrow">GROP Selection Test</p>
+    <h1>計算・空間認識テスト</h1>
+    <p class="lead">PDFの問題を、そのまま受験しやすいWebテストにした版です。全13問を回答して送信すると、管理画面で結果を確認できます。</p>
+    <div class="notice-grid">
+      <div class="notice-box">
+        <strong>問題数</strong>
+        <span>13問</span>
+      </div>
+      <div class="notice-box">
+        <strong>制限時間</strong>
+        <span>20分</span>
+      </div>
+      <div class="notice-box">
+        <strong>出題内容</strong>
+        <span>計算 / 記号 / 図形</span>
+      </div>
+    </div>
+    <form id="intro-form" class="intro-form">
+      <label>
+        氏名
+        <input type="text" id="name" required placeholder="例: NGUYEN VAN A">
+      </label>
+      <button type="submit" class="primary">テスト開始</button>
+    </form>
+  </div>
+</section>
+
+<section id="step-test" class="screen">
+  <header class="test-header">
+    <div>
+      <p class="header-label">受験者</p>
+      <strong id="candidate-label">-</strong>
+    </div>
+    <div class="header-center">
+      <p class="header-label">進捗</p>
+      <strong id="progress">0 / 13</strong>
+    </div>
+    <div class="timer-wrap">
+      <p class="header-label">残り時間</p>
+      <div id="timer" class="timer">20:00</div>
+    </div>
+  </header>
+
+  <main class="test-main">
+    <section class="section-card">
+      <div class="section-head">
+        <p class="section-index">Section 1</p>
+        <h2>計算問題</h2>
+      </div>
+      <div id="section-arithmetic" class="question-list"></div>
+    </section>
+
+    <section class="section-card">
+      <div class="section-head">
+        <p class="section-index">Section 2</p>
+        <h2>虫食い計算</h2>
+      </div>
+      <p class="section-note">空欄には、<code>+</code> <code>-</code> <code>x</code> <code>/</code> のいずれかを入れてください。</p>
+      <div id="section-operators" class="question-list"></div>
+    </section>
+
+    <section class="section-card">
+      <div class="section-head">
+        <p class="section-index">Section 3</p>
+        <h2>判断力・図形</h2>
+      </div>
+      <div id="section-spatial" class="question-list"></div>
+    </section>
+  </main>
+
+  <footer class="test-footer">
+    <p class="footer-note">すべての問題に回答すると送信できます。</p>
+    <button id="submit-btn" class="primary" disabled>回答を送信</button>
+  </footer>
+</section>
+
+<section id="step-done" class="screen">
+  <div class="card done-card">
+    <p class="eyebrow">Completed</p>
+    <h1>送信が完了しました</h1>
+    <p class="lead">受験ありがとうございます。結果は管理画面で確認できます。</p>
+    <p class="done-meta" id="done-meta"></p>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
