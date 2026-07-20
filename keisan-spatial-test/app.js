@@ -22,18 +22,18 @@
           <div class="question-badge">Q${question.number}</div>
           <div class="question-body">
             <h3>${question.title}</h3>
-            <p class="vi-text question-help">Chọn giờ và phút bằng danh sách ở bên dưới.</p>
+            <p class="vi-text question-help">Chọn giờ và phút trong danh sách bên dưới. Vui lòng trả lời theo dạng giờ và phút.</p>
             <div class="time-select-row">
               <select data-kind="time-hour" data-question-id="${question.id}">
-                <option value="">時間</option>
+                <option value="">Giờ</option>
                 ${buildNumberOptions(0, 5)}
               </select>
-              <span class="time-unit">時間</span>
+              <span class="time-unit">時間 / Giờ</span>
               <select data-kind="time-minute" data-question-id="${question.id}">
-                <option value="">分</option>
+                <option value="">Phút</option>
                 ${buildNumberOptions(0, 59)}
               </select>
-              <span class="time-unit">分</span>
+              <span class="time-unit">分 / Phút</span>
             </div>
           </div>
         </article>
