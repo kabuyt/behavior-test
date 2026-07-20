@@ -2,15 +2,15 @@
   const operatorChoices = [
     { value: "+", label: "+" },
     { value: "-", label: "-" },
-    { value: "x", label: "x" },
-    { value: "/", label: "/" }
+    { value: "x", label: "×" },
+    { value: "/", label: "÷" }
   ];
 
   const questions = [
     { id: "calc1", section: "arithmetic", number: 1, title: "25 + 48 =", type: "text", answerType: "number", correct: "73" },
     { id: "calc2", section: "arithmetic", number: 2, title: "100 - 37 =", type: "text", answerType: "number", correct: "63" },
-    { id: "calc3", section: "arithmetic", number: 3, title: "12 x 8 =", type: "text", answerType: "number", correct: "96" },
-    { id: "calc4", section: "arithmetic", number: 4, title: "84 / 7 =", type: "text", answerType: "number", correct: "12" },
+    { id: "calc3", section: "arithmetic", number: 3, title: "12 × 8 =", type: "text", answerType: "number", correct: "96" },
+    { id: "calc4", section: "arithmetic", number: 4, title: "84 ÷ 7 =", type: "text", answerType: "number", correct: "12" },
     { id: "calc5", section: "arithmetic", number: 5, title: "1時間30分 + 45分 =", type: "text", answerType: "time", correct: "135" },
 
     { id: "op1", section: "operators", number: 6, type: "operators", expression: ["24", "6", "9"], target: "13", correct: ["/", "+"] },
@@ -126,9 +126,15 @@
     return normalized === question.correct;
   }
 
+  function displayOperator(value) {
+    if (value === "/") return "÷";
+    if (value === "x") return "×";
+    return value;
+  }
+
   function formatExpected(question) {
     if (question.type === "operators") {
-      return question.expression[0] + " " + question.correct[0] + " " + question.expression[1] + " " + question.correct[1] + " " + question.expression[2] + " = " + question.target;
+      return question.expression[0] + " " + displayOperator(question.correct[0]) + " " + question.expression[1] + " " + displayOperator(question.correct[1]) + " " + question.expression[2] + " = " + question.target;
     }
     if (question.id === "calc5") {
       return "2時間15分";
@@ -139,7 +145,7 @@
   function formatAnswer(question, answer) {
     if (!isAnswered(question, answer)) return "未回答";
     if (question.type === "operators") {
-      return question.expression[0] + " " + answer[0] + " " + question.expression[1] + " " + answer[1] + " " + question.expression[2] + " = " + question.target;
+      return question.expression[0] + " " + displayOperator(answer[0]) + " " + question.expression[1] + " " + displayOperator(answer[1]) + " " + question.expression[2] + " = " + question.target;
     }
     if (question.id === "calc5") {
       const normalized = normalizeAnswer(question, answer);
