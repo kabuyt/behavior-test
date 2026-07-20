@@ -7,7 +7,7 @@
     timerId: null
   };
 
-  const { questions, operatorChoices, isAnswered, scoreAnswers, formatAnswer } = window.TEST_APP;
+  const { questions, operatorChoices, isAnswered } = window.TEST_APP;
 
   const $ = (id) => document.getElementById(id);
 
@@ -23,8 +23,8 @@
           <div class="question-badge">Q${question.number}</div>
           <div class="question-body">
             <h3>${question.title}</h3>
-            <p class="vi-text question-help">Nhap dap an vao o ben duoi.</p>
-            <input class="answer-input" type="text" data-kind="text" data-question-id="${question.id}" placeholder="ここに入力 / Nhap dap an">
+            <p class="vi-text question-help">Nhập đáp án vào ô bên dưới.</p>
+            <input class="answer-input" type="text" data-kind="text" data-question-id="${question.id}" placeholder="ここに入力 / Nhập đáp án">
           </div>
         </article>
       `;
@@ -36,7 +36,7 @@
         <article class="question" data-question-id="${question.id}">
           <div class="question-badge">Q${question.number}</div>
           <div class="question-body">
-            <p class="vi-text question-help">Chon dau tinh dung cho moi o trong.</p>
+            <p class="vi-text question-help">Chọn dấu tính đúng cho mỗi ô trống.</p>
             <div class="operator-line">
               <span>${question.expression[0]}</span>
               <select data-kind="operator" data-position="0" data-question-id="${question.id}">
@@ -71,7 +71,7 @@
         <div class="question-badge">Q${question.number}</div>
         <div class="question-body">
           <h3>${question.title}</h3>
-          <p class="vi-text question-help">Hay quan sat hinh va chon 1 dap an dung.</p>
+          <p class="vi-text question-help">Hãy quan sát hình và chọn 1 đáp án đúng.</p>
           <div class="prompt-wrap">${prompt}</div>
           <div class="choice-row">${choices}</div>
         </div>
@@ -136,10 +136,9 @@
     $("submit-btn").disabled = true;
     window.clearInterval(state.timerId);
 
-    const score = scoreAnswers(state.answers);
     const payload = {
       candidate_name: state.name,
-      score,
+      score: window.TEST_APP.scoreAnswers(state.answers),
       max_score: questions.length,
       answers: state.answers,
       duration_seconds: Math.round((Date.now() - state.startedAt) / 1000),
@@ -147,28 +146,21 @@
       notes: timedOut ? "時間切れで自動送信" : null
     };
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("calculation_spatial_test_results")
-      .insert(payload)
-      .select()
-      .single();
+      .insert(payload);
 
     if (error) {
       const extra = error.message && error.message.indexOf("calculation_spatial_test_results") !== -1
-        ? "\\n\\nSupabase に schema.sql がまだ適用されていない可能性があります。\\nCo the schema.sql chua duoc ap dung tren Supabase."
+        ? "\\n\\nSupabase に schema.sql がまだ適用されていない可能性があります。\\nCó thể schema.sql chưa được áp dụng trên Supabase."
         : "";
-      alert("送信に失敗しました。\\nGui bai that bai.\\n" + error.message + extra);
+      alert("送信に失敗しました。\\nGửi bài thất bại.\\n" + error.message + extra);
       state.submitted = false;
       $("submit-btn").disabled = false;
       return;
     }
 
-    const summary = [
-      "受験者: " + data.candidate_name,
-      "得点: " + score + " / " + questions.length,
-      "保存ID: " + String(data.id).slice(0, 8)
-    ];
-    $("done-meta").textContent = summary.join(" / ");
+    $("done-meta").textContent = "結果は担当者が確認します。 / Kết quả sẽ được người phụ trách kiểm tra.";
     show("step-done");
   }
 
@@ -186,8 +178,7 @@
   });
 
   $("submit-btn").addEventListener("click", () => {
-    const preview = questions.map((question) => "Q" + question.number + ": " + formatAnswer(question, state.answers[question.id])).join("\n");
-    if (!window.confirm("回答を送信しますか？ / Ban co muon gui bai khong?\n\n" + preview)) return;
+    if (!window.confirm("回答を送信しますか？ / Bạn có muốn gửi bài không?")) return;
     submitAnswers(false);
   });
 

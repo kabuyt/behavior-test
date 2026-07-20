@@ -12,35 +12,35 @@
     <p class="eyebrow">GROP Selection Test</p>
     <h1>計算・空間認識テスト</h1>
     <p class="lead">PDFの問題を、そのまま受験しやすいWebテストにした版です。全13問を回答して送信すると、管理画面で結果を確認できます。</p>
-    <p class="vi-text lead">Day la ban web cua bai kiem tra trong file PDF. Sau khi tra loi va gui tat ca 13 cau hoi, nguoi quan ly co the xem ket qua tren man hinh admin.</p>
+    <p class="vi-text lead">Đây là bản web của bài kiểm tra trong file PDF. Sau khi trả lời và gửi tất cả 13 câu hỏi, người quản lý có thể xem kết quả trên màn hình admin.</p>
     <div class="notice-grid">
       <div class="notice-box">
         <strong>問題数</strong>
         <span>13問</span>
-        <small class="vi-text">So cau hoi: 13</small>
+        <small class="vi-text">Số câu hỏi: 13</small>
       </div>
       <div class="notice-box">
         <strong>制限時間</strong>
         <span>20分</span>
-        <small class="vi-text">Thoi gian lam bai: 20 phut</small>
+        <small class="vi-text">Thời gian làm bài: 20 phút</small>
       </div>
       <div class="notice-box">
         <strong>出題内容</strong>
         <span>計算 / 記号 / 図形</span>
-        <small class="vi-text">Noi dung: tinh toan / ky hieu / hinh hoc</small>
+        <small class="vi-text">Nội dung: tính toán / ký hiệu / hình học</small>
       </div>
     </div>
     <div class="guide-box">
       <p>回答は半角数字で入力してください。図形問題は正しい選択肢を1つ選んでください。</p>
-      <p class="vi-text">Hay nhap dap an bang so. Doi voi cau hoi hinh hoc, hay chon 1 dap an dung.</p>
+      <p class="vi-text">Hãy nhập đáp án bằng số. Đối với câu hỏi hình học, hãy chọn 1 đáp án đúng.</p>
     </div>
     <form id="intro-form" class="intro-form">
       <label>
         氏名
-        <span class="vi-text inline">Ho va ten</span>
+        <span class="vi-text inline">Họ và tên</span>
         <input type="text" id="name" required placeholder="例: NGUYEN VAN A">
       </label>
-      <button type="submit" class="primary">テスト開始 / Bat dau</button>
+      <button type="submit" class="primary">テスト開始 / Bắt đầu</button>
     </form>
   </div>
 </section>
@@ -49,17 +49,17 @@
   <header class="test-header">
     <div>
       <p class="header-label">受験者</p>
-      <p class="header-label vi-text">Thi sinh</p>
+      <p class="header-label vi-text">Thí sinh</p>
       <strong id="candidate-label">-</strong>
     </div>
     <div class="header-center">
       <p class="header-label">進捗</p>
-      <p class="header-label vi-text">Tien do</p>
+      <p class="header-label vi-text">Tiến độ</p>
       <strong id="progress">0 / 13</strong>
     </div>
     <div class="timer-wrap">
       <p class="header-label">残り時間</p>
-      <p class="header-label vi-text">Thoi gian con lai</p>
+      <p class="header-label vi-text">Thời gian còn lại</p>
       <div id="timer" class="timer">20:00</div>
     </div>
   </header>
@@ -70,7 +70,7 @@
         <p class="section-index">Section 1</p>
         <h2>計算問題</h2>
       </div>
-      <p class="vi-text section-note">Phan 1: Cac bai toan tinh.</p>
+      <p class="vi-text section-note">Phần 1: Các bài toán tính.</p>
       <div id="section-arithmetic" class="question-list"></div>
     </section>
 
@@ -80,7 +80,7 @@
         <h2>虫食い計算</h2>
       </div>
       <p class="section-note">空欄には、<code>+</code> <code>-</code> <code>x</code> <code>/</code> のいずれかを入れてください。</p>
-      <p class="vi-text section-note">Hay chon dau <code>+</code>, <code>-</code>, <code>x</code> hoac <code>/</code> de hoan thanh phep tinh.</p>
+      <p class="vi-text section-note">Hãy chọn dấu <code>+</code>, <code>-</code>, <code>x</code> hoặc <code>/</code> để hoàn thành phép tính.</p>
       <div id="section-operators" class="question-list"></div>
     </section>
 
@@ -89,15 +89,15 @@
         <p class="section-index">Section 3</p>
         <h2>判断力・図形</h2>
       </div>
-      <p class="vi-text section-note">Phan 3: Kha nang nhan biet quy luat va hinh hoc.</p>
+      <p class="vi-text section-note">Phần 3: Khả năng nhận biết quy luật và hình học.</p>
       <div id="section-spatial" class="question-list"></div>
     </section>
   </main>
 
   <footer class="test-footer">
     <p class="footer-note">すべての問題に回答すると送信できます。</p>
-    <p class="footer-note vi-text">Chi co the gui bai sau khi tra loi tat ca cau hoi.</p>
-    <button id="submit-btn" class="primary" disabled>回答を送信 / Gui bai</button>
+    <p class="footer-note vi-text">Chỉ có thể gửi bài sau khi trả lời tất cả câu hỏi.</p>
+    <button id="submit-btn" class="primary" disabled>回答を送信 / Gửi bài</button>
   </footer>
 </section>
 
@@ -105,8 +105,8 @@
   <div class="card done-card">
     <p class="eyebrow">Completed</p>
     <h1>送信が完了しました</h1>
-    <p class="lead">受験ありがとうございます。結果は管理画面で確認できます。</p>
-    <p class="vi-text lead">Da gui bai thanh cong. Cam on ban da tham gia bai kiem tra.</p>
+    <p class="lead">受験ありがとうございます。結果は担当者が確認します。</p>
+    <p class="vi-text lead">Đã gửi bài thành công. Kết quả sẽ được người phụ trách kiểm tra.</p>
     <p class="done-meta" id="done-meta"></p>
   </div>
 </section>
