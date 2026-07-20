@@ -74,6 +74,9 @@
       <div class="panel detail-panel">
         <div class="panel-head">
           <h2>詳細</h2>
+          <div class="panel-actions">
+            <button id="pdf-btn" class="primary" disabled>PDF出力</button>
+          </div>
         </div>
         <div id="detail-body" class="detail-body muted">左の一覧から受験者を選択してください。</div>
       </div>
@@ -89,6 +92,7 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
 <script src="config.js"></script>
 <script src="questions.js"></script>
 <script src="admin.js"></script>

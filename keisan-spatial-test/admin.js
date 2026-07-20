@@ -18,6 +18,7 @@
   $("reload-btn").addEventListener("click", loadResults);
   $("search").addEventListener("input", renderList);
   $("csv-btn").addEventListener("click", exportCSV);
+  $("pdf-btn").addEventListener("click", downloadPDF);
 
   async function loadResults() {
     const { data, error } = await supabase
@@ -76,6 +77,7 @@
   function renderDetail() {
     if (!current) {
       $("detail-body").innerHTML = "<p class=\"muted\">左の一覧から受験者を選択してください。</p>";
+      $("pdf-btn").disabled = true;
       return;
     }
 
@@ -96,12 +98,53 @@
     }).join("");
 
     $("detail-body").innerHTML = `
-      <div class="detail-head">
-        <h3>${escapeHtml(current.candidate_name)}</h3>
-        <p>${formatDate(current.submitted_at)} / ${current.score}点 / ${formatDuration(current.duration_seconds)}</p>
-      </div>
-      <div class="answer-grid">${answerCards}</div>
+      <article class="report-sheet">
+        <div class="detail-head">
+          <div>
+            <h3>${escapeHtml(current.candidate_name)}</h3>
+            <p>${formatDate(current.submitted_at)} / ${current.score}点 / ${formatDuration(current.duration_seconds)}</p>
+          </div>
+          <div class="score-badge">${current.score} / ${current.max_score}</div>
+        </div>
+        <div class="answer-grid">${answerCards}</div>
+      </article>
     `;
+    $("pdf-btn").disabled = false;
+  }
+
+  function downloadPDF() {
+    if (!current) {
+      alert("先に受験者の詳細を開いてください。");
+      return;
+    }
+
+    const report = document.querySelector("#detail-body .report-sheet");
+    if (!report) {
+      alert("PDFにする内容が見つかりません。");
+      return;
+    }
+
+    const button = $("pdf-btn");
+    const original = button.textContent;
+    button.disabled = true;
+    button.textContent = "PDF作成中...";
+
+    const filename = buildPdfFileName(current);
+    html2pdf().set({
+      margin: [10, 10, 10, 10],
+      filename,
+      image: { type: "jpeg", quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["css", "legacy"] }
+    }).from(report).save().then(() => {
+      button.disabled = false;
+      button.textContent = original;
+    }).catch((error) => {
+      alert("PDF出力に失敗しました。\n" + error.message);
+      button.disabled = false;
+      button.textContent = original;
+    });
   }
 
   function renderStats() {
@@ -163,6 +206,12 @@
     const minute = Math.floor(Number(value) / 60);
     const second = Number(value) % 60;
     return minute + "分" + second + "秒";
+  }
+
+  function buildPdfFileName(item) {
+    const date = item.submitted_at ? item.submitted_at.slice(0, 10) : "result";
+    const name = String(item.candidate_name || "candidate").replace(/[\\/:*?\"<>|]/g, "_");
+    return "計算・空間認識テスト_" + name + "_" + date + ".pdf";
   }
 
   function pad(value) {
