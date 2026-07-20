@@ -22,6 +22,7 @@
           <div class="question-badge">Q${question.number}</div>
           <div class="question-body">
             <h3>${question.title}</h3>
+            ${question.titleVi ? `<p class="vi-text question-help">${question.titleVi}</p>` : ""}
             <p class="vi-text question-help">Chọn giờ và phút trong danh sách bên dưới. Vui lòng trả lời theo dạng giờ và phút.</p>
             <div class="time-select-row">
               <select data-kind="time-hour" data-question-id="${question.id}">

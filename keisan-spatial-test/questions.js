@@ -11,7 +11,7 @@
     { id: "calc2", section: "arithmetic", number: 2, title: "100 - 37 =", type: "text", answerType: "number", correct: "63" },
     { id: "calc3", section: "arithmetic", number: 3, title: "12 × 8 =", type: "text", answerType: "number", correct: "96" },
     { id: "calc4", section: "arithmetic", number: 4, title: "84 ÷ 7 =", type: "text", answerType: "number", correct: "12" },
-    { id: "calc5", section: "arithmetic", number: 5, title: "1時間30分 + 45分 =", type: "text", answerType: "time", correct: "135" },
+    { id: "calc5", section: "arithmetic", number: 5, title: "1時間30分 + 45分 =", titleVi: "1 giờ 30 phút + 45 phút =", type: "text", answerType: "time", correct: "135" },
 
     { id: "op1", section: "operators", number: 6, type: "operators", expression: ["24", "6", "9"], target: "13", correct: ["/", "+"] },
     { id: "op2", section: "operators", number: 7, type: "operators", expression: ["7", "8", "12"], target: "68", correct: ["x", "+"] },
