@@ -23,7 +23,8 @@
           <div class="question-badge">Q${question.number}</div>
           <div class="question-body">
             <h3>${question.title}</h3>
-            <input class="answer-input" type="text" data-kind="text" data-question-id="${question.id}" placeholder="ここに入力">
+            <p class="vi-text question-help">Nhap dap an vao o ben duoi.</p>
+            <input class="answer-input" type="text" data-kind="text" data-question-id="${question.id}" placeholder="ここに入力 / Nhap dap an">
           </div>
         </article>
       `;
@@ -35,6 +36,7 @@
         <article class="question" data-question-id="${question.id}">
           <div class="question-badge">Q${question.number}</div>
           <div class="question-body">
+            <p class="vi-text question-help">Chon dau tinh dung cho moi o trong.</p>
             <div class="operator-line">
               <span>${question.expression[0]}</span>
               <select data-kind="operator" data-position="0" data-question-id="${question.id}">
@@ -69,6 +71,7 @@
         <div class="question-badge">Q${question.number}</div>
         <div class="question-body">
           <h3>${question.title}</h3>
+          <p class="vi-text question-help">Hay quan sat hinh va chon 1 dap an dung.</p>
           <div class="prompt-wrap">${prompt}</div>
           <div class="choice-row">${choices}</div>
         </div>
@@ -152,9 +155,9 @@
 
     if (error) {
       const extra = error.message && error.message.indexOf("calculation_spatial_test_results") !== -1
-        ? "\\n\\nSupabase に schema.sql がまだ適用されていない可能性があります。"
+        ? "\\n\\nSupabase に schema.sql がまだ適用されていない可能性があります。\\nCo the schema.sql chua duoc ap dung tren Supabase."
         : "";
-      alert("送信に失敗しました。\\n" + error.message + extra);
+      alert("送信に失敗しました。\\nGui bai that bai.\\n" + error.message + extra);
       state.submitted = false;
       $("submit-btn").disabled = false;
       return;
@@ -184,7 +187,7 @@
 
   $("submit-btn").addEventListener("click", () => {
     const preview = questions.map((question) => "Q" + question.number + ": " + formatAnswer(question, state.answers[question.id])).join("\n");
-    if (!window.confirm("回答を送信しますか？\n\n" + preview)) return;
+    if (!window.confirm("回答を送信しますか？ / Ban co muon gui bai khong?\n\n" + preview)) return;
     submitAnswers(false);
   });
 

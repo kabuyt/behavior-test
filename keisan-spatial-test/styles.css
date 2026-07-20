@@ -97,6 +97,16 @@ h1 {
   color: #374151;
 }
 
+.vi-text {
+  color: var(--teal);
+  font-size: 0.94rem;
+}
+
+.inline {
+  display: inline-block;
+  margin-left: 8px;
+}
+
 .notice-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -123,6 +133,23 @@ h1 {
   font-size: 1.35rem;
   font-weight: 700;
   margin-top: 6px;
+}
+
+.notice-box small {
+  display: block;
+  margin-top: 8px;
+}
+
+.guide-box {
+  margin: 0 0 28px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(15, 118, 110, 0.08);
+  border: 1px solid rgba(15, 118, 110, 0.14);
+}
+
+.guide-box p:last-child {
+  margin-bottom: 0;
 }
 
 label {
@@ -286,6 +313,10 @@ button.primary:disabled {
 .question-body h3 {
   margin-bottom: 12px;
   font-size: 1.12rem;
+}
+
+.question-help {
+  margin-bottom: 10px;
 }
 
 .answer-input {
