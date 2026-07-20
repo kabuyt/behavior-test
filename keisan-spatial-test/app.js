@@ -126,9 +126,11 @@
     document.querySelectorAll("[data-kind='time-hour'], [data-kind='time-minute']").forEach((select) => {
       select.addEventListener("change", () => {
         const questionId = select.dataset.questionId;
-        const existing = parseTimeAnswer(state.answers[questionId]);
-        const hour = select.dataset.kind === "time-hour" ? select.value : existing.hour;
-        const minute = select.dataset.kind === "time-minute" ? select.value : existing.minute;
+        const questionEl = select.closest("[data-question-id]");
+        const hourSelect = questionEl ? questionEl.querySelector("[data-kind='time-hour']") : null;
+        const minuteSelect = questionEl ? questionEl.querySelector("[data-kind='time-minute']") : null;
+        const hour = hourSelect ? hourSelect.value : "";
+        const minute = minuteSelect ? minuteSelect.value : "";
         state.answers[questionId] = hour !== "" && minute !== "" ? `${hour}:${minute}` : "";
         updateProgress();
       });
@@ -150,12 +152,6 @@
         updateProgress();
       });
     });
-  }
-
-  function parseTimeAnswer(value) {
-    if (!value || String(value).indexOf(":") === -1) return { hour: "", minute: "" };
-    const parts = String(value).split(":");
-    return { hour: parts[0] || "", minute: parts[1] || "" };
   }
 
   function updateProgress() {
