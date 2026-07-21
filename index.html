@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>行動選択テスト / Test lựa chọn hành động</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 
@@ -25,6 +25,11 @@
     </ul>
 
     <form id="intro-form">
+      <p id="managed-notice" class="managed-notice" hidden>
+        候補者専用URLです。表示された氏名を確認して開始してください。<br>
+        <span class="vi">Đây là đường dẫn dành riêng cho ứng viên. Vui lòng xác nhận họ tên trước khi bắt đầu.</span>
+      </p>
+      <p id="intro-error" class="intro-error" hidden></p>
       <label>
         氏名 / <span class="vi">Họ tên</span>
         <input type="text" id="name" required placeholder="例: NGUYEN VAN A"
@@ -67,7 +72,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-<script src="questions.js"></script>
-<script src="app.js"></script>
+<script src="questions.js?v=8"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>
