@@ -184,10 +184,13 @@
       return;
     }
 
+    const holder = document.createElement("div");
+    holder.className = "pdf-holder";
     const container = document.createElement("div");
     container.className = "pdf-report";
     container.innerHTML = buildPdfMarkup(selected);
-    document.body.appendChild(container);
+    holder.appendChild(container);
+    document.body.appendChild(holder);
 
     const button = $("bulk-pdf-btn");
     const original = button.textContent;
@@ -202,12 +205,12 @@
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       pagebreak: { mode: ["css", "legacy"] }
     }).from(container).save().then(() => {
-      container.remove();
+      holder.remove();
       button.disabled = false;
       button.textContent = original;
       updateSelectionUi();
     }).catch((error) => {
-      container.remove();
+      holder.remove();
       button.disabled = false;
       button.textContent = original;
       updateSelectionUi();

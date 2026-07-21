@@ -644,10 +644,18 @@ button.primary:disabled {
   color: var(--muted);
 }
 
-.pdf-report {
-  position: absolute;
-  left: -99999px;
+/* 画面外に逃がすのは親の .pdf-holder 側。.pdf-report 自体を absolute にすると
+   html2pdf が作るクローン用コンテナの高さが 0 になり、PDF が白紙になる。 */
+.pdf-holder {
+  position: fixed;
+  left: -10000px;
   top: 0;
+  width: 794px;
+  z-index: -1;
+}
+
+.pdf-report {
+  position: static;
   width: 794px;
   background: #fff;
   color: #111827;
