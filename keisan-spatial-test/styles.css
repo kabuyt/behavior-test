@@ -646,84 +646,121 @@ button.primary:disabled {
 
 /* 画面外に逃がすのは親の .pdf-holder 側。.pdf-report 自体を absolute にすると
    html2pdf が作るクローン用コンテナの高さが 0 になり、PDF が白紙になる。 */
+/* A4 横 / 余白8mm のときの中身の幅 = (297 - 16)mm ≒ 1062px */
 .pdf-holder {
   position: fixed;
   left: -10000px;
   top: 0;
-  width: 794px;
+  width: 1062px;
   z-index: -1;
 }
 
 .pdf-report {
   position: static;
-  width: 794px;
+  width: 1062px;
   background: #fff;
   color: #111827;
   font-family: "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
-}
-
-.pdf-person {
-  padding: 28px 26px;
 }
 
 .page-break {
   page-break-after: always;
 }
 
-.pdf-person-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-  gap: 16px;
-  margin-bottom: 18px;
-  padding-bottom: 12px;
+.pdf-list {
+  padding: 22px 20px;
+}
+
+.pdf-list-head {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
   border-bottom: 2px solid #e5e7eb;
 }
 
-.pdf-person-head h1 {
-  margin: 0 0 8px;
-  font-size: 1.3rem;
-}
-
-.pdf-name {
+.pdf-list-head h1 {
   margin: 0 0 6px;
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.25rem;
 }
 
 .pdf-meta {
   margin: 0;
   color: #4b5563;
-  font-size: 0.9rem;
-}
-
-.pdf-score {
-  min-width: 96px;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: #f3f4f6;
-  text-align: center;
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 0.85rem;
 }
 
 .pdf-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
 .pdf-table th,
 .pdf-table td {
-  padding: 9px 10px;
+  padding: 6px 8px;
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle;
+  line-height: 1.35;
 }
 
 .pdf-table th {
   background: #f9fafb;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.pdf-list-table .col-name {
+  width: 230px;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.pdf-list-table .col-date {
+  width: 96px;
+  white-space: nowrap;
+  color: #4b5563;
+}
+
+.pdf-list-table .col-score {
+  width: 76px;
+  white-space: nowrap;
+  text-align: center;
+  font-weight: 800;
+}
+
+.pdf-list-table .col-time {
+  width: 84px;
+  white-space: nowrap;
+  text-align: center;
+  color: #4b5563;
+}
+
+.pdf-list-table .col-q {
+  width: auto;
+  padding: 6px 2px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 0.82rem;
+}
+
+.pdf-list-table td.q-ok {
+  color: #047857;
+  font-weight: 700;
+}
+
+.pdf-list-table td.q-ng {
+  background: #fef2f2;
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.pdf-list-table tbody tr:nth-child(even) td {
+  background-color: #fafafa;
+}
+
+.pdf-list-table tbody tr:nth-child(even) td.q-ng {
+  background-color: #fee2e2;
 }
 
 @media print {

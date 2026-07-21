@@ -202,8 +202,8 @@
       filename: buildMergedPdfFileName(selected),
       image: { type: "jpeg", quality: 0.95 },
       html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["css", "legacy"] }
+      jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
+      pagebreak: { mode: ["css", "legacy"], avoid: "tr" }
     }).from(container).save().then(() => {
       holder.remove();
       button.disabled = false;
@@ -219,47 +219,51 @@
   }
 
   function buildPdfMarkup(items) {
-    return items.map((item, index) => `
-      <section class="pdf-person ${index < items.length - 1 ? "page-break" : ""}">
-        <header class="pdf-person-head">
-          <div>
-            <h1>計算・空間認識テスト 結果</h1>
-            <p class="pdf-name">${escapeHtml(item.candidate_name)}</p>
-            <p class="pdf-meta">受験日時: ${formatDate(item.submitted_at)} / 所要時間: ${formatDuration(item.duration_seconds)}</p>
-          </div>
-          <div class="pdf-score">${item.score} / ${item.max_score}</div>
+    const headCells = questions.map((question) => `<th class="col-q">Q${question.number}</th>`).join("");
+
+    const bodyRows = items.map((item) => {
+      const cells = questions.map((question) => {
+        const answer = item.answers ? item.answers[question.id] : undefined;
+        const correct = isCorrect(question, answer);
+        return `<td class="col-q ${correct ? "q-ok" : "q-ng"}">${correct ? "○" : "×"}</td>`;
+      }).join("");
+
+      return `
+        <tr>
+          <td class="col-name">${escapeHtml(item.candidate_name)}</td>
+          <td class="col-date">${formatDateShort(item.submitted_at)}</td>
+          <td class="col-score">${item.score} / ${item.max_score}</td>
+          <td class="col-time">${formatDuration(item.duration_seconds)}</td>
+          ${cells}
+        </tr>
+      `;
+    }).join("");
+
+    return `
+      <section class="pdf-list">
+        <header class="pdf-list-head">
+          <h1>計算・空間認識テスト 結果一覧</h1>
+          <p class="pdf-meta">出力日: ${formatDate(new Date().toISOString())} ／ 対象: ${items.length}名 ／ 満点: ${questions.length}点 ／ ○ = 正解、× = 不正解</p>
         </header>
-        <table class="pdf-table">
+        <table class="pdf-table pdf-list-table">
           <thead>
             <tr>
-              <th>Q</th>
-              <th>回答</th>
-              <th>正答</th>
-              <th>判定</th>
+              <th class="col-name">氏名</th>
+              <th class="col-date">受験日時</th>
+              <th class="col-score">得点</th>
+              <th class="col-time">所要時間</th>
+              ${headCells}
             </tr>
           </thead>
-          <tbody>
-            ${questions.map((question) => {
-              const answer = item.answers ? item.answers[question.id] : undefined;
-              const correct = isCorrect(question, answer);
-              return `
-                <tr>
-                  <td>Q${question.number}</td>
-                  <td>${escapeHtml(formatAnswer(question, answer))}</td>
-                  <td>${escapeHtml(formatExpected(question))}</td>
-                  <td>${correct ? "正解" : "不正解"}</td>
-                </tr>
-              `;
-            }).join("")}
-          </tbody>
+          <tbody>${bodyRows}</tbody>
         </table>
       </section>
-    `).join("");
+    `;
   }
 
   function buildMergedPdfFileName(items) {
     const date = new Date().toISOString().slice(0, 10);
-    return "計算・空間認識テスト_選択結果_" + items.length + "名_" + date + ".pdf";
+    return "計算・空間認識テスト_結果一覧_" + items.length + "名_" + date + ".pdf";
   }
 
   function buildOperatorTitle(question) {
@@ -298,6 +302,12 @@
     if (!value) return "-";
     const date = new Date(value);
     return date.getFullYear() + "/" + pad(date.getMonth() + 1) + "/" + pad(date.getDate()) + " " + pad(date.getHours()) + ":" + pad(date.getMinutes());
+  }
+
+  function formatDateShort(value) {
+    if (!value) return "-";
+    const date = new Date(value);
+    return pad(date.getMonth() + 1) + "/" + pad(date.getDate()) + " " + pad(date.getHours()) + ":" + pad(date.getMinutes());
   }
 
   function formatDuration(value) {
