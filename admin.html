@@ -3,19 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>事前テスト管理へ移動します</title>
-<link rel="stylesheet" href="styles.css">
+<title>管理画面 - 行動選択テスト</title>
+<link rel="stylesheet" href="styles.css?v=9">
 </head>
-<body>
-<section class="screen active">
-  <div class="card center">
-    <h1>事前テスト管理へ移動します</h1>
-    <p>行動選択テストの結果は、GROPの事前テスト管理サイトに統合されました。</p>
-    <p><a href="https://kabuyt.github.io/nihongo-test-1-4ka/interview-manager/index.html">事前テスト管理を開く</a></p>
+<body class="admin">
+
+<section id="login-gate" class="screen active">
+  <div class="card">
+    <h1>行動選択テスト 管理画面</h1>
+    <p class="lead">特定技能試験用の結果を確認します。</p>
+    <form id="login-form">
+      <label>ログインID
+        <input type="text" id="admin-account" autocomplete="username" autocapitalize="none" required>
+      </label>
+      <label>パスワード
+        <input type="password" id="admin-password" autocomplete="current-password" required>
+      </label>
+      <button class="primary">ログイン</button>
+      <p id="login-error" class="intro-error" hidden>ログインIDまたはパスワードが違います。</p>
+    </form>
   </div>
 </section>
-<script>
-  window.location.replace('https://kabuyt.github.io/nihongo-test-1-4ka/interview-manager/index.html');
-</script>
+
+<section id="admin-main" class="screen">
+  <header class="admin-header">
+    <h1>行動選択テスト 管理画面</h1>
+    <nav>
+      <button data-tab="list" class="tab-btn active">一覧</button>
+      <button data-tab="stats" class="tab-btn">集計</button>
+      <button data-tab="detail" class="tab-btn" style="display:none">個別詳細</button>
+    </nav>
+    <div class="admin-tools">
+      <input type="search" id="search" placeholder="氏名で検索">
+      <button id="reload-btn">再読込</button>
+      <button id="csv-btn">CSV出力</button>
+      <button id="bulk-pdf-btn">📄 選択をPDF一括DL</button>
+      <button id="bulk-delete-btn" class="danger">🗑 選択を削除</button>
+      <button id="logout-btn">ログアウト</button>
+    </div>
+  </header>
+
+  <section id="tab-list" class="tab active">
+    <div class="summary-cards">
+      <div class="summary"><span>総受験者</span><strong id="sum-total">-</strong></div>
+    </div>
+    <table class="results">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="select-all-cb" title="全選択"></th>
+          <th>受験日時</th>
+          <th>氏名</th>
+          <th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th>
+          <th>所要</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+  </section>
+
+  <section id="tab-stats" class="tab">
+    <h2>設問ごとの選択分布</h2>
+    <div id="question-stats"></div>
+  </section>
+
+  <section id="tab-detail" class="tab">
+    <button id="back-to-list" class="secondary">← 一覧に戻る</button>
+    <button id="pdf-btn" class="primary">📄 PDFダウンロード</button>
+    <button id="print-btn" class="secondary">印刷</button>
+    <div id="detail-body"></div>
+  </section>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="config.js"></script>
+<script src="questions.js?v=9"></script>
+<script src="admin.js?v=9"></script>
 </body>
 </html>

@@ -1,19 +1,70 @@
 // 管理画面ロジック
 (() => {
   const $ = (id) => document.getElementById(id);
+  const AUTH_EMAIL_DOMAIN = 'nihongo-test.local';
   let allResults = [];
 
-  // ログイン
-  $('login-form').addEventListener('submit', (e) => {
+  $('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    if ($('admin-pw').value === ADMIN_PASSWORD) {
-      $('login-gate').classList.remove('active');
-      $('admin-main').classList.add('active');
-      loadResults();
-    } else {
-      alert('パスワードが違います');
+    const loginId = $('admin-account').value.trim().toLowerCase();
+    const account = loginId === 'grop' ? 'grop-admin' : loginId;
+    const password = $('admin-password').value;
+    const button = e.submitter || e.target.querySelector('button[type="submit"]');
+    const errorMessage = $('login-error');
+    button.disabled = true;
+    errorMessage.hidden = true;
+    if (!/^[a-z0-9-]+$/.test(account)) {
+      errorMessage.hidden = false;
+      button.disabled = false;
+      return;
     }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: `${account}@${AUTH_EMAIL_DOMAIN}`,
+      password
+    });
+    if (error || !data.session || !(await isAdminAccount())) {
+      await supabase.auth.signOut();
+      errorMessage.hidden = false;
+      button.disabled = false;
+      return;
+    }
+    button.disabled = false;
+    showAdmin();
+    await loadResults();
   });
+
+  async function isAdminAccount() {
+    const { data, error } = await supabase
+      .from('manager_accounts')
+      .select('role')
+      .single();
+    return !error && data?.role === 'admin';
+  }
+
+  function showAdmin() {
+    $('login-gate').classList.remove('active');
+    $('admin-main').classList.add('active');
+  }
+
+  async function initializeAuth() {
+    const { data } = await supabase.auth.getSession();
+    if (data.session && await isAdminAccount()) {
+      showAdmin();
+      await loadResults();
+    } else if (data.session) {
+      await supabase.auth.signOut();
+    }
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    allResults = [];
+    $('admin-main').classList.remove('active');
+    $('login-gate').classList.add('active');
+    $('admin-account').value = '';
+    $('admin-password').value = '';
+  }
 
   // タブ切替
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -32,6 +83,7 @@
   $('csv-btn').addEventListener('click', exportCSV);
   $('bulk-pdf-btn').addEventListener('click', bulkDownloadPDF);
   $('bulk-delete-btn').addEventListener('click', bulkDeleteResults);
+  $('logout-btn').addEventListener('click', logout);
   $('back-to-list').addEventListener('click', () => switchTab('list'));
   $('print-btn').addEventListener('click', () => window.print());
   $('pdf-btn').addEventListener('click', downloadPDF);
@@ -74,6 +126,7 @@
     const { data, error } = await supabase
       .from('behavior_test_results')
       .select('*')
+      .is('interview_id', null)
       .order('submitted_at', { ascending: false });
     if (error) { alert('読込失敗: ' + error.message); return; }
     allResults = data || [];
@@ -365,4 +418,6 @@
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[c]));
   }
+
+  initializeAuth();
 })();
