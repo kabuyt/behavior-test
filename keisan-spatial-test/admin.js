@@ -2,6 +2,9 @@
   const { questions, scoreAnswers, isCorrect, formatAnswer, formatExpected } = window.TEST_APP;
   const $ = (id) => document.getElementById(id);
 
+  // A4 横 / 余白8mm のときの中身の幅 = (297 - 16)mm ≒ 1062px
+  const PDF_WIDTH_PX = 1062;
+
   let allResults = [];
   let current = null;
   let selectedIds = new Set();
@@ -184,10 +187,15 @@
       return;
     }
 
+    // レイアウトの要はインラインで指定する。styles.css が古いまま
+    // キャッシュされていても PDF が白紙にならないようにするため
+    // （.pdf-report が position:absolute だとコンテナ高さが 0 になる）。
     const holder = document.createElement("div");
     holder.className = "pdf-holder";
+    holder.style.cssText = "position:fixed;left:-10000px;top:0;width:" + PDF_WIDTH_PX + "px;z-index:-1;";
     const container = document.createElement("div");
     container.className = "pdf-report";
+    container.style.cssText = "position:static;width:" + PDF_WIDTH_PX + "px;background:#fff;color:#111827;";
     container.innerHTML = buildPdfMarkup(selected);
     holder.appendChild(container);
     document.body.appendChild(holder);
