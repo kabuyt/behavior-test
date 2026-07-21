@@ -665,7 +665,7 @@ button.danger:disabled {
    html2pdf が作るクローン用コンテナの高さが 0 になり、PDF が白紙になる。 */
 /* A4 横 / 余白8mm のときの中身の幅 = (297 - 16)mm ≒ 1062px */
 .pdf-holder {
-  position: fixed;
+  position: absolute;
   left: -10000px;
   top: 0;
   width: 1062px;

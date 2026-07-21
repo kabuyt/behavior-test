@@ -227,9 +227,11 @@
     // レイアウトの要はインラインで指定する。styles.css が古いまま
     // キャッシュされていても PDF が白紙にならないようにするため
     // （.pdf-report が position:absolute だとコンテナ高さが 0 になる）。
+    // 退避先は position:fixed ではなく absolute。fixed だと画面をスクロール
+    // した状態で html2canvas の描画位置がずれ、内容が欠ける／白紙になる。
     const holder = document.createElement("div");
     holder.className = "pdf-holder";
-    holder.style.cssText = "position:fixed;left:-10000px;top:0;width:" + PDF_WIDTH_PX + "px;z-index:-1;";
+    holder.style.cssText = "position:absolute;left:-10000px;top:0;width:" + PDF_WIDTH_PX + "px;z-index:-1;";
     const container = document.createElement("div");
     container.className = "pdf-report";
     container.style.cssText = "position:static;width:" + PDF_WIDTH_PX + "px;background:#fff;color:#111827;";
@@ -242,23 +244,27 @@
     button.disabled = true;
     button.textContent = "PDF作成中...";
 
+    // 描画中はページ先頭に戻す（スクロール位置による描画ずれの保険）。終わったら復元。
+    const scroll = { x: window.scrollX, y: window.scrollY };
+    window.scrollTo(0, 0);
+
+    const cleanup = () => {
+      holder.remove();
+      window.scrollTo(scroll.x, scroll.y);
+      button.disabled = false;
+      button.textContent = original;
+      updateSelectionUi();
+    };
+
     html2pdf().set({
       margin: [8, 8, 8, 8],
       filename: buildMergedPdfFileName(selected),
       image: { type: "jpeg", quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", scrollX: 0, scrollY: 0 },
       jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
       pagebreak: { mode: ["css", "legacy"], avoid: "tr" }
-    }).from(container).save().then(() => {
-      holder.remove();
-      button.disabled = false;
-      button.textContent = original;
-      updateSelectionUi();
-    }).catch((error) => {
-      holder.remove();
-      button.disabled = false;
-      button.textContent = original;
-      updateSelectionUi();
+    }).from(container).save().then(cleanup).catch((error) => {
+      cleanup();
       alert("PDF出力に失敗しました。\n" + error.message);
     });
   }
