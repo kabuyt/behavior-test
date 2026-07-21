@@ -46,7 +46,7 @@
         { value: "3", label: "3" },
         { value: "4", label: "4" }
       ],
-      correct: "3"
+      correct: "1"
     },
     {
       id: "sp3",
@@ -61,7 +61,7 @@
         { value: "3", label: "3" },
         { value: "4", label: "4" }
       ],
-      correct: "4"
+      correct: "2"
     }
   ];
 

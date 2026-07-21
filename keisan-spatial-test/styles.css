@@ -209,6 +209,23 @@ button.primary:disabled {
   transform: none;
 }
 
+button.danger {
+  padding: 14px 28px;
+  background: #b91c1c;
+  color: #fff;
+  font-weight: 700;
+}
+
+button.danger:hover {
+  background: #991b1b;
+}
+
+button.danger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .intro-form {
   max-width: 420px;
 }

@@ -24,6 +24,7 @@
   $("search").addEventListener("input", renderList);
   $("csv-btn").addEventListener("click", exportCSV);
   $("bulk-pdf-btn").addEventListener("click", downloadSelectedAsPdf);
+  $("delete-btn").addEventListener("click", deleteSelected);
   $("select-all").addEventListener("change", toggleSelectAll);
 
   async function loadResults() {
@@ -168,6 +169,42 @@
   function updateSelectionUi() {
     $("selected-meta").textContent = selectedIds.size + "人選択中";
     $("bulk-pdf-btn").disabled = selectedIds.size === 0;
+    $("delete-btn").disabled = selectedIds.size === 0;
+  }
+
+  async function deleteSelected() {
+    const selected = allResults.filter((item) => selectedIds.has(item.id));
+    if (!selected.length) {
+      alert("削除する受験者を選択してください。");
+      return;
+    }
+
+    const names = selected.map((item) => "・" + item.candidate_name + "（" + formatDate(item.submitted_at) + " / " + item.score + "点）").join("\n");
+    if (!confirm("以下の " + selected.length + " 件を削除します。\nこの操作は取り消せません。\n\n" + names)) return;
+    if (!confirm("本当に削除しますか？（" + selected.length + " 件）")) return;
+
+    const button = $("delete-btn");
+    const original = button.textContent;
+    button.disabled = true;
+    button.textContent = "削除中...";
+
+    const { error } = await supabase
+      .from("calculation_spatial_test_results")
+      .delete()
+      .in("id", selected.map((item) => item.id));
+
+    button.textContent = original;
+
+    if (error) {
+      alert("削除に失敗しました。\n" + error.message);
+      button.disabled = false;
+      return;
+    }
+
+    selected.forEach((item) => selectedIds.delete(item.id));
+    if (current && selected.some((item) => item.id === current.id)) current = null;
+    await loadResults();
+    alert(selected.length + " 件を削除しました。");
   }
 
   function syncSelectAllState(rows) {
