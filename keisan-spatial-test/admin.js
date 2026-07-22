@@ -290,8 +290,8 @@
       `;
     }).join("");
 
-    return `
-      <section class="pdf-list">
+    const listSection = `
+      <section class="pdf-list page-break">
         <header class="pdf-list-head">
           <h1>計算・空間認識テスト 結果一覧</h1>
           <p class="pdf-meta">出力日: ${formatDate(new Date().toISOString())} ／ 対象: ${items.length}名 ／ 満点: ${questions.length}点 ／ ○ = 正解、× = 不正解</p>
@@ -308,6 +308,59 @@
           </thead>
           <tbody>${bodyRows}</tbody>
         </table>
+      </section>
+    `;
+
+    const detailSections = items.map((item, index) =>
+      buildDetailPage(item, index, items.length)
+    ).join("");
+
+    return listSection + detailSections;
+  }
+
+  function buildDetailPage(item, index, total) {
+    const answers = item.answers || {};
+    const rowHtml = (question) => {
+      const answer = answers[question.id];
+      const correct = isCorrect(question, answer);
+      return `
+        <tr>
+          <td class="d-q">Q${question.number}</td>
+          <td class="d-title">${escapeHtml(question.title || buildOperatorTitle(question))}</td>
+          <td class="d-answer ${correct ? "" : "d-wrong"}">${escapeHtml(formatAnswer(question, answer))}</td>
+          <td class="d-expected">${escapeHtml(formatExpected(question))}</td>
+          <td class="d-judge ${correct ? "d-ok" : "d-ng"}">${correct ? "○" : "×"}</td>
+        </tr>
+      `;
+    };
+
+    const half = Math.ceil(questions.length / 2);
+    const leftRows = questions.slice(0, half).map(rowHtml).join("");
+    const rightRows = questions.slice(half).map(rowHtml).join("");
+    const headRow = `
+      <tr>
+        <th class="d-q">Q</th>
+        <th class="d-title">問題</th>
+        <th class="d-answer">回答</th>
+        <th class="d-expected">正答</th>
+        <th class="d-judge">判定</th>
+      </tr>
+    `;
+
+    return `
+      <section class="pdf-detail ${index < total - 1 ? "page-break" : ""}">
+        <header class="pdf-detail-head">
+          <div>
+            <p class="pdf-detail-label">解答の詳細（${index + 1} / ${total}）</p>
+            <h2>${escapeHtml(item.candidate_name)}</h2>
+            <p class="pdf-meta">受験日時: ${formatDate(item.submitted_at)} ／ 所要時間: ${formatDuration(item.duration_seconds)}</p>
+          </div>
+          <div class="pdf-detail-score">${item.score} / ${item.max_score}</div>
+        </header>
+        <div class="pdf-detail-grid">
+          <table class="pdf-table pdf-detail-table"><thead>${headRow}</thead><tbody>${leftRows}</tbody></table>
+          <table class="pdf-table pdf-detail-table"><thead>${headRow}</thead><tbody>${rightRows}</tbody></table>
+        </div>
       </section>
     `;
   }

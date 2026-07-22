@@ -780,6 +780,102 @@ button.danger:disabled {
   background-color: #fee2e2;
 }
 
+/* 解答の詳細（2ページ目以降） */
+.pdf-detail {
+  padding: 22px 20px;
+}
+
+.pdf-detail-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.pdf-detail-label {
+  margin: 0 0 4px;
+  color: #6b7280;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.pdf-detail-head h2 {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+
+.pdf-detail-score {
+  min-width: 96px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f3f4f6;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pdf-detail-grid {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.pdf-detail-table {
+  width: 50%;
+  font-size: 0.82rem;
+}
+
+.pdf-detail-table th,
+.pdf-detail-table td {
+  padding: 5px 7px;
+}
+
+.pdf-detail-table .d-q {
+  width: 34px;
+  white-space: nowrap;
+  font-weight: 700;
+  text-align: center;
+}
+
+.pdf-detail-table .d-title {
+  color: #374151;
+}
+
+.pdf-detail-table .d-answer {
+  width: 132px;
+  word-break: break-word;
+}
+
+.pdf-detail-table td.d-wrong {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.pdf-detail-table .d-expected {
+  width: 132px;
+  color: #047857;
+  word-break: break-word;
+}
+
+.pdf-detail-table .d-judge {
+  width: 40px;
+  text-align: center;
+  font-weight: 800;
+}
+
+.pdf-detail-table td.d-ok {
+  color: #047857;
+}
+
+.pdf-detail-table td.d-ng {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
 @media print {
   .admin-header,
   .panel-actions,
